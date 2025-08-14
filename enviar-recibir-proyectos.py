@@ -4,11 +4,12 @@ from pymongo import MongoClient
 from bson import ObjectId
 import os
 import uuid
-
+from dotenv import load_dotenv
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB
+
 
 # Extensiones permitidas
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4'}
@@ -20,8 +21,12 @@ def allowed_file(filename):
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
+load_dotenv()  # Carga las variables del .env
+
 # Conexión a MongoDB Atlas
-client = MongoClient("mongodb+srv://edwinjavierpa:1234@comidas.naznnua.mongodb.net/comidas?retryWrites=true&w=majority")
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+
 db = client["proyectos"]
 proyectos_collection = db["proyecto"]
 
